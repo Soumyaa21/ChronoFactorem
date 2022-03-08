@@ -6,7 +6,8 @@ import MidsemSched from "./MidsemSched.jsx";
 import CompreSched from "./CompreSched.jsx";
 
 import html2canvas from "html2canvas";
-
+import { jsPDF } from "jspdf";
+ 
 class ExportPage extends Component {
   componentDidMount() {
     const pageToExport = document.getElementById("export-page");
@@ -15,10 +16,16 @@ class ExportPage extends Component {
         const imgData = canvas
           .toDataURL("image/png")
           .replace("image/png", "image/octet-stream");
+
+        const doc = new jsPDF({
+          orientation: "landscape",
+          unit: "pt"
+        });
+        
+        doc.addImage(imgData, 'PNG', 16, 9);
+        doc.save('timetable.pdf');
+
         window.open(imgData, "_blank");
-        document.getElementById("image").href = imgData;
-        document.getElementById("image").download = "time.png";
-        document.getElementById("image").click();
       })
       .then(() => {
         document.getElementById("0").click();
